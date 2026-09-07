@@ -191,7 +191,20 @@ p { margin: 0; }
   align-items: center; justify-content: center;
   border: 1px solid var(--line); border-radius: var(--r-pill);
   background: var(--ground-2); cursor: pointer;
+  transition: box-shadow .25s var(--ease), border-color .25s var(--ease),
+              background-color .25s var(--ease), transform .2s var(--ease);
 }
+/* the lift is the affordance: it has to read as hoverable before you click it */
+.navtoggle:hover, .navtoggle.is-locked {
+  background: var(--ground);
+  border-color: var(--line-2);
+  box-shadow: 0 1px 2px rgba(20,17,15,.06), 0 8px 20px rgba(20,17,15,.14);
+}
+[data-theme="brass"] .navtoggle:hover, [data-theme="brass"] .navtoggle.is-locked {
+  box-shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 20px rgba(0,0,0,.55);
+}
+.navtoggle.is-locked { border-color: var(--ink-3); }
+.navtoggle:active { transform: scale(.94); }
 .navtoggle span { display: block; width: 16px; height: 1.5px; background: var(--ink); position: relative; transition: transform .3s var(--ease); }
 .navtoggle span::before, .navtoggle span::after {
   content: ""; position: absolute; left: 0; width: 16px; height: 1.5px;
@@ -204,17 +217,30 @@ p { margin: 0; }
 .navtoggle[aria-expanded="true"] span::after { opacity: 0; }
 
 @media (max-width: 940px) {
-  .navtoggle { display: inline-flex; }
+  .navtoggle { display: inline-flex; order: 2; }
+  /* logo hard left, controls hard right, switch tucked against the hamburger */
+  .hactions { margin-left: auto; gap: .5rem; }
   .nav {
-    position: fixed; inset: 68px 0 auto 0;
-    flex-direction: column; align-items: stretch; gap: 0;
-    padding: .5rem var(--pad-x) 1.5rem;
-    background: var(--ground); border-bottom: 1px solid var(--line);
-    transform: translateY(-8px); opacity: 0; visibility: hidden;
-    transition: opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+    position: fixed; top: 62px; right: var(--pad-x); left: auto; bottom: auto;
+    width: min(280px, calc(100vw - (var(--pad-x) * 2)));
+    flex-direction: column; align-items: stretch; gap: 2px;
+    padding: .35rem;
+    background: var(--ground); border: 1px solid var(--line);
+    border-radius: var(--r-card); box-shadow: var(--shadow-lg);
+    transform: translateY(-6px) scale(.985); transform-origin: 100% 0;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .2s var(--ease), transform .24s var(--ease), visibility .24s;
   }
-  .nav.is-open { opacity: 1; visibility: visible; transform: none; }
-  .nav a { font-size: 1.12rem; padding: .85rem 0; border-bottom: 1px solid var(--line); }
+  /* invisible bridge, so the pointer can cross the gap without closing it */
+  .nav::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+  .nav.is-open { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+  .nav a {
+    font-size: 1rem; padding: .68rem .8rem; border-radius: 11px;
+    border-bottom: 0; color: var(--ink-2);
+    transition: background-color .2s var(--ease), color .2s var(--ease);
+  }
+  .nav a:hover { background: var(--ground-2); color: var(--ink); }
+  .nav a[aria-current="page"] { color: var(--ink); background: var(--accent-soft); font-weight: 500; }
   .nav a[aria-current="page"]::after { display: none; }
 }
 
@@ -258,8 +284,11 @@ p { margin: 0; }
   align-items: center; gap: clamp(2rem, 5vw, 5rem);
   padding-block: clamp(1.5rem, 3vw, 2.75rem) clamp(2.5rem, 4.5vw, 4rem);
 }
-.hero__copy { max-width: 32ch; }
-.hero__copy h1 { margin-bottom: 1.25rem; }
+/* uncapped so the one-line name is never squeezed by the copy column; the
+   paragraph keeps its own measure below */
+.hero__copy { max-width: none; }
+/* the name is one line at every width, never "Pr0" stacked over "Social" */
+.hero__copy h1 { margin-bottom: 1.25rem; white-space: nowrap; font-size: clamp(2.3rem, 6.4vw, 5.5rem); }
 .hero__copy h1 em { font-style: normal; color: var(--accent); }
 .hero__media {
   position: relative; aspect-ratio: 4 / 5;
@@ -297,6 +326,28 @@ p { margin: 0; }
 }
 
 /* 9. PULL QUOTE ---------------------------------------------------------- */
+
+.pull {
+  display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  gap: clamp(1.75rem, 5vw, 4rem); align-items: center; isolation: isolate;
+}
+.pull__fig { margin: 0; position: relative; justify-self: end; align-self: end; }
+.pull__fig img {
+  width: min(100%, 430px); height: auto; margin-left: auto;
+  filter: drop-shadow(0 26px 48px rgba(20,17,15,.24));
+}
+[data-theme="brass"] .pull__fig img { filter: drop-shadow(0 26px 48px rgba(0,0,0,.6)); }
+/* the disc reads as a stage behind him rather than a floating cut-out */
+.pull__fig::before {
+  content: ""; position: absolute; z-index: -1;
+  left: 8%; right: 8%; bottom: 6%; aspect-ratio: 1;
+  border-radius: 50%; background: var(--accent-soft);
+}
+@media (max-width: 840px) {
+  .pull { grid-template-columns: 1fr; gap: 2rem; }
+  .pull__fig { justify-self: center; }
+  .pull__fig img { width: min(100%, 300px); margin-inline: auto; }
+}
 
 .pull__q {
   font-size: clamp(1.5rem, 3.5vw, 2.75rem); font-weight: 500;
@@ -373,11 +424,30 @@ p { margin: 0; }
 .vtile--lg .vtile__frame { aspect-ratio: 16 / 9; }
 .vtile--lg .vtile__play i { width: 76px; height: 76px; }
 
+/* the featured video is shot vertical, so it gets a portrait frame and the
+   copy sits beside it instead of above a letterboxed crop */
+.vfeat { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+.vfeat__media { width: 100%; max-width: 430px; justify-self: end; }
+.vtile--tall .vtile__frame { aspect-ratio: 9 / 16; }
+.vtile--tall .vtile__play i { width: 68px; height: 68px; }
+@media (max-width: 840px) {
+  .vfeat { grid-template-columns: 1fr; gap: 2rem; }
+  .vfeat__media { justify-self: start; max-width: 100%; }
+}
+
 /* 14. MASONRY GALLERY ---------------------------------------------------- */
 
 .masonry { columns: 3; column-gap: var(--gap); }
 @media (max-width: 900px) { .masonry { columns: 2; } }
-@media (max-width: 560px) { .masonry { columns: 1; } }
+/* one column of sixteen tall photos is a scroll, not a gallery: on phones the
+   columns become a mosaic, one wide plate then pairs, repeating */
+@media (max-width: 620px) {
+  .masonry { columns: auto; display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .masonry figure { margin: 0; height: 100%; }
+  .masonry figure img { height: 100%; object-fit: cover; }
+  .masonry figure:nth-child(5n + 1) { grid-column: 1 / -1; aspect-ratio: 5 / 4; }
+  .masonry figure:not(:nth-child(5n + 1)) { aspect-ratio: 3 / 4; }
+}
 .masonry figure { margin: 0 0 var(--gap); break-inside: avoid; border-radius: var(--r-card); overflow: hidden; background: var(--ground-3); box-shadow: var(--shadow-sm); cursor: zoom-in; }
 .masonry img { width: 100%; transition: transform .8s var(--ease); }
 .masonry figure:hover img { transform: scale(1.03); }
@@ -468,7 +538,17 @@ a.row:hover { padding-left: .5rem; }
 .footer { border-top: 1px solid var(--line); padding-block: clamp(2.5rem, 4.5vw, 3.5rem) 1.75rem; background: var(--ground-2); }
 .footer__top { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
 @media (max-width: 760px) { .footer__top { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 480px) { .footer__top { grid-template-columns: 1fr; } }
+/* the identity block spans the width and the two link lists stay side by side,
+   so the footer is three tidy blocks instead of one long ladder of links */
+@media (max-width: 620px) {
+  .footer__top { grid-template-columns: 1fr 1fr; gap: 1.9rem 1.25rem; }
+  .footer__top > div:first-child {
+    grid-column: 1 / -1; padding-bottom: 1.6rem; border-bottom: 1px solid var(--line);
+  }
+  .footer h3 { margin-bottom: .8rem; }
+  .footer__links { gap: .55rem; }
+  .footer__bot { flex-direction: column; align-items: flex-start; gap: .5rem; }
+}
 .footer h3 { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 1rem; }
 .footer__links { display: grid; gap: .6rem; }
 .footer__links a { font-size: .95rem; color: var(--ink-2); transition: color .2s var(--ease); }

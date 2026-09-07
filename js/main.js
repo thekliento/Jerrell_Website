@@ -34,19 +34,59 @@
     }).observe(sentinel);
   }
 
-  /* ---- mobile nav ------------------------------------------------------ */
+  /* ---- nav dropdown ----------------------------------------------------
+     Hover opens it and leaving closes it, on pointing devices only. A click
+     locks it open until you click again, pick a link, click away or hit Esc.
+     Touch devices never get the hover half, so a tap is the only opener. */
   var toggle = document.querySelector(".navtoggle");
   var nav = document.querySelector(".nav");
   if (toggle && nav) {
+    var locked = false;
+    var hideTimer = null;
+
+    function setOpen(on) {
+      nav.classList.toggle("is-open", on);
+      toggle.setAttribute("aria-expanded", String(on));
+    }
+    function openNow() {
+      clearTimeout(hideTimer);
+      setOpen(true);
+    }
+    function closeSoon() {
+      if (locked) return;
+      clearTimeout(hideTimer);
+      /* the grace period covers the gap between the button and the panel */
+      hideTimer = setTimeout(function () { setOpen(false); }, 180);
+    }
+    function dismiss() {
+      locked = false;
+      toggle.classList.remove("is-locked");
+      clearTimeout(hideTimer);
+      setOpen(false);
+    }
+
     toggle.addEventListener("click", function () {
-      var open = nav.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded", String(open));
+      if (locked) { dismiss(); return; }
+      locked = true;
+      toggle.classList.add("is-locked");
+      openNow();
     });
+
+    if (window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      [toggle, nav].forEach(function (el) {
+        el.addEventListener("mouseenter", openNow);
+        el.addEventListener("mouseleave", closeSoon);
+      });
+    }
+
     nav.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") {
-        nav.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
+      if (e.target.closest("a")) dismiss();
+    });
+    document.addEventListener("click", function (e) {
+      if (locked && !nav.contains(e.target) && !toggle.contains(e.target)) dismiss();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("is-open")) { dismiss(); toggle.focus(); }
     });
   }
 
