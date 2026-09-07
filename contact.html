@@ -56,7 +56,9 @@
         <h2 class="t-section">Send the details</h2>
         <p class="copy mt-s">For a show, include the date, the venue, the city and roughly how many people the room holds. For press, say what you are working on and your deadline.</p>
 
-        <form class="form mt-m" id="bookform" data-to="klientohq@gmail.com" novalidate>
+        <form class="form mt-m" id="bookform" novalidate
+              data-to="klientohq@gmail.com"
+              data-endpoint="https://formspree.io/f/REPLACE_WITH_REAL_FORM_ID">
           <div class="form__2">
             <div class="field">
               <label for="f-name">Name</label>
@@ -92,10 +94,15 @@
             <label for="f-msg">Message</label>
             <textarea id="f-msg" name="message" required></textarea>
           </div>
-          <div class="btnrow">
-            <button class="btn btn--accent" type="submit">Send inquiry<svg class="arw" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M1 7h11M7.5 2.5L12 7l-4.5 4.5"/></svg></button>
+          <div class="field field--hp" aria-hidden="true">
+            <label for="f-company">Company</label>
+            <input id="f-company" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
           </div>
-          <p class="formnote">This opens your email app with everything filled in, so nothing gets lost in a form.</p>
+          <div class="btnrow">
+            <button class="btn btn--accent" type="submit" data-label="Send inquiry">Send inquiry<svg class="arw" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M1 7h11M7.5 2.5L12 7l-4.5 4.5"/></svg></button>
+          </div>
+          <p class="formstatus" id="formstatus" role="status" aria-live="polite" hidden></p>
+          <p class="formnote">Goes straight to the booking inbox. You get a copy of nothing, so keep your own note of the date.</p>
         </form>
       </div>
 

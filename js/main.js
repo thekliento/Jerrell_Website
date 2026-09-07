@@ -158,10 +158,19 @@
   /* ---- booking form: composes an email, no backend required ------------- */
   var form = document.getElementById("bookform");
   if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var d = new FormData(form);
-      var lines = [
+    var status = document.getElementById("formstatus");
+    var button = form.querySelector('button[type="submit"]');
+    var buttonHTML = button ? button.innerHTML : "";
+
+    function say(state, text) {
+      if (!status) return;
+      status.hidden = false;
+      status.setAttribute("data-state", state);
+      status.textContent = text;
+    }
+
+    function bodyLines(d) {
+      return [
         "Name: " + (d.get("name") || ""),
         "Email: " + (d.get("email") || ""),
         "Inquiry: " + (d.get("type") || ""),
@@ -169,9 +178,74 @@
         "Venue / location: " + (d.get("venue") || "not specified"),
         "", (d.get("message") || "")
       ];
+    }
+
+    function mailtoFallback(d) {
       window.location.href = "mailto:" + form.dataset.to +
         "?subject=" + encodeURIComponent((d.get("type") || "Inquiry") + " - " + (d.get("name") || "")) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
+        "&body=" + encodeURIComponent(bodyLines(d).join("\n"));
+    }
+
+    function markInvalid() {
+      var bad = null;
+      form.querySelectorAll(".field").forEach(function (f) { f.classList.remove("is-invalid"); });
+      form.querySelectorAll("[required]").forEach(function (el) {
+        if (!el.checkValidity()) {
+          var field = el.closest(".field");
+          if (field) field.classList.add("is-invalid");
+          if (!bad) bad = el;
+        }
+      });
+      return bad;
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var bad = markInvalid();
+      if (bad) {
+        say("error", "A couple of fields still need filling in.");
+        bad.focus();
+        return;
+      }
+
+      var d = new FormData(form);
+
+      // Honeypot: a bot filled a field a person never sees. Pretend it worked.
+      if (d.get("_gotcha")) { say("ok", "Thanks, that is on its way."); form.reset(); return; }
+
+      var endpoint = form.dataset.endpoint || "";
+      var live = endpoint && endpoint.indexOf("REPLACE_WITH") === -1;
+
+      // No endpoint wired yet, so fall back to the client's own mail app.
+      if (!live) { mailtoFallback(d); return; }
+
+      form.classList.add("is-sending");
+      if (button) button.textContent = "Sending...";
+      say("sending", "Sending...");
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: d.get("name") || "",
+          email: d.get("email") || "",
+          type: d.get("type") || "",
+          date: d.get("date") || "",
+          venue: d.get("venue") || "",
+          message: d.get("message") || "",
+          _subject: (d.get("type") || "Inquiry") + " - " + (d.get("name") || "")
+        })
+      }).then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        form.reset();
+        say("ok", "Got it. Expect a reply at the address you gave, usually within a day or two.");
+      }).catch(function () {
+        say("error", "That did not go through. Email " + form.dataset.to + " directly and it will reach the same place.");
+      }).then(function () {
+        form.classList.remove("is-sending");
+        if (button) button.innerHTML = buttonHTML;
+      });
     });
   }
 })();
