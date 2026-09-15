@@ -1,0 +1,23 @@
+name = "pr0social-booking"
+main = "src/index.js"
+compatibility_date = "2026-09-15"
+workers_dev = false
+
+# The address the form emails. Must be a VERIFIED destination on Cloudflare
+# Email Routing or send() throws. Change it here, redeploy, done.
+[vars]
+BOOKING_TO = "pr0socialprojects@gmail.com"
+
+# Sending binding. The allowlist is the guard: even if BOOKING_TO were edited to
+# something hostile, the Worker can only ever mail these two.
+[[send_email]]
+name = "BOOKING"
+allowed_destination_addresses = [
+  "pr0socialprojects@gmail.com",
+  "crivascamilo@gmail.com",
+]
+
+# Same origin as the site, so the browser needs no CORS and the form just works.
+[[routes]]
+pattern = "pr0social.com/api/booking"
+zone_name = "pr0social.com"
