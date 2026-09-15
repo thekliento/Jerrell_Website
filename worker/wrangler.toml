@@ -3,17 +3,20 @@ main = "src/index.js"
 compatibility_date = "2026-09-15"
 workers_dev = false
 
-# The address the form emails. Must be a VERIFIED destination on Cloudflare
-# Email Routing or send() throws. Change it here, redeploy, done.
+# Where a booking enquiry lands. The mailbox itself is hosted on Zoho (free tier),
+# Camilo's call 2026-09-15, because Cloudflare Email Routing forwards but cannot
+# host an inbox Jerrell logs into.
+# WARNING: this address must ALSO be a VERIFIED destination address on the
+# Cloudflare account or send() throws a 502. Verifying is a click in the inbox.
 [vars]
-BOOKING_TO = "pr0socialprojects@gmail.com"
+BOOKING_TO = "crivascamilo@gmail.com"
 
 # Sending binding. The allowlist is the guard: even if BOOKING_TO were edited to
 # something hostile, the Worker can only ever mail these two.
 [[send_email]]
 name = "BOOKING"
 allowed_destination_addresses = [
-  "pr0socialprojects@gmail.com",
+  "booking@pr0social.com",
   "crivascamilo@gmail.com",
 ]
 
