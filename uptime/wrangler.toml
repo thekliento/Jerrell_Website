@@ -1,0 +1,26 @@
+# Round-the-clock uptime monitoring for pr0social.com.
+# Deck item: "uptime monitoring around the clock", part of the $200/mo.
+#
+# Cron only, no HTTP route, no KV, no third-party service, no account to lose.
+# Cost: Workers free plan. 96 scheduled runs a day against a 100,000/day
+# allowance, and cron triggers are free. This bills nothing, ever.
+name = "pr0social-uptime"
+main = "src/index.js"
+compatibility_date = "2026-09-16"
+workers_dev = false
+
+[triggers]
+# every 15 minutes, plus a monthly heartbeat on the 1st at 13:00 UTC (09:00 ET)
+crons = ["*/15 * * * *", "0 13 1 * *"]
+
+[vars]
+ALERT_TO = "crivascamilo@gmail.com"
+
+[[send_email]]
+name = "ALERT"
+# the allowlist is the guard: even a hostile edit to ALERT_TO cannot redirect mail
+allowed_destination_addresses = ["crivascamilo@gmail.com"]
+
+[observability]
+enabled = true
+head_sampling_rate = 1
