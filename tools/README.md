@@ -49,3 +49,18 @@ bound to a route on **pr0social.com only**. On `dev.pr0social.pages.dev` that pa
 
 Cloudflare stamps `X-Robots-Tag: noindex` on the dev preview itself, so it can
 never outrank the real site in search. Verified 2026-09-16.
+
+## The mobile and browser gate
+
+The deck sells "checked on iPhone, Android and desktop after every change", so
+this is a deliverable, not a nicety. Before `promote.sh`, on the dev preview:
+
+1. `preview_start {name:"epk"}`, then the Browser pane at **375x812** and desktop.
+2. Walk the page that changed plus `/` and `/contact`.
+3. The header at 375px: wordmark left, hamburger right, nothing bunched.
+4. Open the nav, tap a link, submit nothing.
+5. `tools/verify.sh dev` for status codes, addresses and headers.
+
+Chrome, Safari and Android all run the same engine family here and the site is
+static HTML with no framework, so one narrow viewport plus one wide one is the
+honest check. Say so rather than claiming four devices were touched.
