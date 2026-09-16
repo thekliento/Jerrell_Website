@@ -1,27 +1,9 @@
-/* Pr0 Social EPK - theme switch, nav, scroll reveal, video + photo modal. */
+/* Pr0 Social EPK - nav, scroll reveal, video + photo modal. One theme: bone. */
 (function () {
   "use strict";
 
-  var root = document.documentElement;
-  var KEY = "pr0-theme";
-
-  /* ---- theme ---------------------------------------------------------- */
-  function applyTheme(name) {
-    if (name === "brass") root.setAttribute("data-theme", "brass");
-    else root.removeAttribute("data-theme");
-    document.querySelectorAll(".tsw button").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(b.dataset.mode === name));
-    });
-    try { localStorage.setItem(KEY, name); } catch (e) {}
-  }
-
-  document.querySelectorAll(".tsw button").forEach(function (b) {
-    b.addEventListener("click", function () { applyTheme(b.dataset.mode); });
-  });
-
-  var stored = "bone";
-  try { stored = localStorage.getItem(KEY) || "bone"; } catch (e) {}
-  applyTheme(stored);
+  /* a visitor who used the retired theme switch still carries the old key */
+  try { localStorage.removeItem("pr0-theme"); } catch (e) {}
 
   /* ---- header ---------------------------------------------------------- */
   var header = document.querySelector(".header");

@@ -5,9 +5,9 @@
    ========================================================================== */
 
 /* 1. TOKENS -------------------------------------------------------------- */
-/* "bone" is drawn from the artist's own photography and cover art: bone-white
-   ground, near-black ink, crimson pulled from the roses. "brass" is the
-   original identity: near-black ground, gold accent. */
+/* One theme, "bone", drawn from the artist's own photography and cover art:
+   bone-white ground, near-black ink, crimson pulled from the roses.
+   Locked 2026-09-16. The former "brass" alternate was retired; it lives in git. */
 
 :root {
   --ground:      #faf8f5;
@@ -38,27 +38,6 @@
   color-scheme: light;
 }
 
-[data-theme="brass"] {
-  /* The original identity, token for token from the first build:
-     --bg-deep, --bg-dark, --bg-card, --text-primary, --text-secondary,
-     --gold and the gold-tinted borders. */
-  --ground:      #090604;
-  --ground-2:    #120b07;
-  --ground-3:    #1e1208;
-  --ink:         #edd9c0;
-  --ink-2:       #d4b896;
-  --ink-3:       #9b7557;
-  --line:        rgba(196, 146, 74, .18);
-  --line-2:      rgba(196, 146, 74, .45);
-  --accent:      #c4924a;
-  --accent-soft: rgba(196, 146, 74, .16);
-  --accent-ink:  #090604;
-  --shadow-sm:   0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.4);
-  --shadow-lg:   0 2px 6px rgba(0,0,0,.5), 0 24px 60px rgba(0,0,0,.6);
-  --glass:       rgba(9, 6, 4, .85);
-
-  color-scheme: dark;
-}
 
 /* 2. RESET + BASE -------------------------------------------------------- */
 
@@ -152,12 +131,9 @@ p { margin: 0; }
 .header__in { height: 68px; display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.5rem); }
 
 .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 600; font-size: 1rem; letter-spacing: -.03em; flex-shrink: 0; }
-.brand img { height: 30px; width: auto; object-fit: contain; }
+/* the wordmark carries the header: ~82% of the 68px bar, his call 2026-09-16 */
+.brand img { height: 56px; width: auto; object-fit: contain; }
 .brand--lg img { height: 42px; }
-/* the wordmark is one artwork recoloured per theme, so it sits on either ground */
-.brand__light { display: none; }
-[data-theme="brass"] .brand__dark { display: none; }
-[data-theme="brass"] .brand__light { display: block; }
 
 .nav { display: flex; align-items: center; gap: clamp(.5rem, 1.5vw, 1.5rem); margin-left: auto; white-space: nowrap; }
 .nav a { font-size: .94rem; color: var(--ink-2); padding: .4rem 0; position: relative; transition: color .2s var(--ease); }
@@ -170,21 +146,6 @@ p { margin: 0; }
 
 .hactions { display: flex; align-items: center; gap: .6rem; flex-shrink: 0; }
 
-/* theme switch */
-.tsw { display: inline-flex; position: relative; padding: 3px; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--ground-2); }
-.tsw__thumb {
-  position: absolute; top: 3px; left: 3px;
-  width: calc(50% - 3px); height: calc(100% - 6px);
-  border-radius: var(--r-pill); background: var(--ink);
-  transition: transform .42s var(--ease); pointer-events: none;
-}
-[data-theme="brass"] .tsw__thumb { transform: translateX(100%); }
-.tsw button {
-  position: relative; z-index: 1; border: 0; background: none; cursor: pointer;
-  padding: .34rem .72rem; font-size: .78rem; font-weight: 500;
-  color: var(--ink-2); border-radius: var(--r-pill); transition: color .3s var(--ease);
-}
-.tsw button[aria-pressed="true"] { color: var(--ground); }
 
 .navtoggle {
   display: none; width: 40px; height: 40px;
@@ -199,9 +160,6 @@ p { margin: 0; }
   background: var(--ground);
   border-color: var(--line-2);
   box-shadow: 0 1px 2px rgba(20,17,15,.06), 0 8px 20px rgba(20,17,15,.14);
-}
-[data-theme="brass"] .navtoggle:hover, [data-theme="brass"] .navtoggle.is-locked {
-  box-shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 20px rgba(0,0,0,.55);
 }
 .navtoggle.is-locked { border-color: var(--ink-3); }
 .navtoggle:active { transform: scale(.94); }
@@ -336,7 +294,6 @@ p { margin: 0; }
   width: min(100%, 430px); height: auto; margin-left: auto;
   filter: drop-shadow(0 26px 48px rgba(20,17,15,.24));
 }
-[data-theme="brass"] .pull__fig img { filter: drop-shadow(0 26px 48px rgba(0,0,0,.6)); }
 /* the disc reads as a stage behind him rather than a floating cut-out */
 .pull__fig::before {
   content: ""; position: absolute; z-index: -1;
@@ -558,6 +515,8 @@ a.row:hover { padding-left: .5rem; }
   border-top: 1px solid var(--line); display: flex; flex-wrap: wrap;
   gap: .75rem 1.5rem; justify-content: space-between; font-size: .84rem; color: var(--ink-3);
 }
+.byk { color: var(--ink-2); border-bottom: 1px solid var(--line-2); transition: color .2s var(--ease), border-color .2s var(--ease); }
+.byk:hover { color: var(--accent); border-color: var(--accent); }
 
 /* 20. MODAL -------------------------------------------------------------- */
 
