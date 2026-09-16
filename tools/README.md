@@ -64,3 +64,19 @@ this is a deliverable, not a nicety. Before `promote.sh`, on the dev preview:
 Chrome, Safari and Android all run the same engine family here and the site is
 static HTML with no framework, so one narrow viewport plus one wide one is the
 honest check. Say so rather than claiming four devices were touched.
+
+## The other two scripts
+
+**`build-press-kit.py`** rebuilds `assets/press/pr0-social-press-kit.zip` from
+`assets/img/` plus the bio text inside the script. The originals are gitignored,
+the zip is not, because `deploy.sh live` ships a clean `git archive` and an
+uncommitted zip would deploy as a dead link. Rebuild and re-commit whenever a
+photo or a fact changes; a stale press kit is a defect, not a cosmetic issue.
+
+**`wire-ga4.py G-XXXXXXXXXX`** adds the GA4 tag to all eight pages and opens the
+CSP for `googletagmanager.com` and the analytics collectors, nothing wider.
+`--remove` takes it all back out. Cloudflare hosting never blocked Google
+Analytics; this site's own CSP did, and that is the only thing the script
+changes. GA4 runs alongside Cloudflare Web Analytics on purpose: ad blockers
+kill GA and not Cloudflare's first-party beacon, so the two numbers disagreeing
+is the signal, not a bug.
