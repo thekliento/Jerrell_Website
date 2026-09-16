@@ -1,8 +1,10 @@
 .DS_Store
 .claude/
 
-# Source material. Only assets/opt is referenced by the site.
-# Originals live on Jerrell's Drive and in this folder locally.
+# Source material. Only assets/opt and assets/press are referenced by the site.
+# Originals live on Jerrell's Drive and in this folder locally. They DO ship,
+# but only inside assets/press/pr0-social-press-kit.zip, which is committed.
+# Rebuild it with tools/build-press-kit.py after changing a photo.
 assets/img/
 assets/covers/
 assets/video-posters/
