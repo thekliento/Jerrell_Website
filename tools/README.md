@@ -40,3 +40,12 @@ every email address the live HTML actually serves.
 - `verify.sh` decodes Cloudflare's `data-cfemail` obfuscation. A plain `curl`
   cannot see the email on the page, which is exactly how a stale
   `klientohq@gmail.com` sat live for a day looking fine.
+
+## One thing the dev preview cannot do
+
+The booking form posts to `/api/booking`, which is the `pr0social-booking` Worker
+bound to a route on **pr0social.com only**. On `dev.pr0social.pages.dev` that path
+404s. That is expected. Test the form on live, never on dev.
+
+Cloudflare stamps `X-Robots-Tag: noindex` on the dev preview itself, so it can
+never outrank the real site in search. Verified 2026-09-16.
