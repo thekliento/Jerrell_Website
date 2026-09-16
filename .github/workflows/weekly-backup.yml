@@ -1,0 +1,50 @@
+# Weekly off-site backup with version history.
+# Deck item, part of the $200/mo.
+#
+# The repo is already one off-site copy with full history, but it only records
+# what we MEANT to ship. This archives what pr0social.com ACTUALLY served that
+# week, straight from the live edge, so a bad deploy or a lost account still
+# leaves a restorable copy of the real site. Public repo, so Actions minutes
+# are free and unlimited.
+name: Weekly off-site backup
+
+on:
+  schedule:
+    - cron: "17 8 * * 1"   # Mondays, 08:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror the live site
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y-%m-%d)"
+          mkdir -p "snapshot"
+          wget --mirror --page-requisites --adjust-extension --convert-links \
+               --no-host-directories --directory-prefix="snapshot" \
+               --reject-regex '\?' --no-verbose \
+               https://pr0social.com/ || true
+          # the crawler follows links, so name the noindex pitch page explicitly
+          wget -q -P snapshot https://pr0social.com/services.html || true
+          wget -q -P snapshot https://pr0social.com/sitemap.xml https://pr0social.com/robots.txt || true
+          echo "Snapshot of https://pr0social.com taken $STAMP UTC" > snapshot/SNAPSHOT.txt
+          find snapshot -type f | sort >> snapshot/SNAPSHOT.txt
+          echo "files: $(find snapshot -type f | wc -l)"
+
+      - name: Fail loudly if the crawl came back empty
+        run: |
+          set -euo pipefail
+          test -s snapshot/index.html || { echo "no index.html: the site did not respond"; exit 1; }
+          grep -q "Pr0 Social" snapshot/index.html || { echo "index.html has no Pr0 Social marker"; exit 1; }
+
+      - name: Keep it
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr0social-live-${{ github.run_id }}
+          path: snapshot
+          retention-days: 90

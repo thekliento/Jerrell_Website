@@ -35,7 +35,7 @@ else
   done
 fi
 
-rm -rf "$DIST/AGENTS.md" "$DIST/.gitignore" "$DIST/tools" "$DIST/worker" "$DIST/uptime" "$DIST/Presentation"
+rm -rf "$DIST/AGENTS.md" "$DIST/.gitignore" "$DIST/tools" "$DIST/worker" "$DIST/uptime" "$DIST/Presentation" "$DIST/.github"
 
 echo "==> deploying $(find "$DIST" -type f | wc -l | tr -d ' ') files to Pages branch '$BRANCH_ARG'"
 CLOUDFLARE_API_TOKEN="$(security find-generic-password -s kliento-cloudflare-token -w)" \
