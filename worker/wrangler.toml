@@ -8,8 +8,12 @@ workers_dev = false
 # host an inbox Jerrell logs into.
 # WARNING: this address must ALSO be a VERIFIED destination address on the
 # Cloudflare account or send() throws a 502. Verifying is a click in the inbox.
+# BOOKING_CC is a best-effort second copy to the inbox Jerrell actually lives in.
+# Free Zoho cannot forward, POP or IMAP, so this Worker is the copy. Camilo's call
+# 2026-09-18. A failed CC never fails the booking: the primary send runs first.
 [vars]
 BOOKING_TO = "booking@pr0social.com"
+BOOKING_CC = "pr0socialprojects@gmail.com"
 
 # Sending binding. The allowlist is the guard: even if BOOKING_TO were edited to
 # something hostile, the Worker can only ever mail these two.
@@ -17,6 +21,7 @@ BOOKING_TO = "booking@pr0social.com"
 name = "BOOKING"
 allowed_destination_addresses = [
   "booking@pr0social.com",
+  "pr0socialprojects@gmail.com",
   "crivascamilo@gmail.com",
 ]
 

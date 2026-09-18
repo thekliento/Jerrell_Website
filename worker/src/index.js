@@ -63,9 +63,9 @@ export default {
       "Sent from the booking form on pr0social.com. Reply goes straight to them.",
     ].join("\r\n");
 
-    const raw = [
+    const rawFor = (to) => [
       `From: ${encodeHeader(FROM_NAME)} <${FROM}>`,
-      `To: <${env.BOOKING_TO}>`,
+      `To: <${to}>`,
       `Reply-To: ${encodeHeader(name)} <${email}>`,
       `Subject: ${subject}`,
       `Message-ID: <${crypto.randomUUID()}@pr0social.com>`,
@@ -78,11 +78,22 @@ export default {
     ].join("\r\n");
 
     try {
-      await env.BOOKING.send(new EmailMessage(FROM, env.BOOKING_TO, raw));
+      await env.BOOKING.send(new EmailMessage(FROM, env.BOOKING_TO, rawFor(env.BOOKING_TO)));
     } catch (err) {
       // The address is almost certainly not verified on Email Routing yet.
       console.error("booking send failed:", err?.message || err);
       return json(502, { error: "Could not send right now." });
+    }
+
+    // Best effort copy to the inbox he reads. It runs AFTER the real send and its
+    // failure is swallowed on purpose, so an unverified or bouncing address can
+    // never cost him a booking.
+    if (env.BOOKING_CC) {
+      try {
+        await env.BOOKING.send(new EmailMessage(FROM, env.BOOKING_CC, rawFor(env.BOOKING_CC)));
+      } catch (err) {
+        console.error("booking cc failed:", err?.message || err);
+      }
     }
 
     return json(200, { ok: true });
