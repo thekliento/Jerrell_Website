@@ -15,12 +15,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets/press/pr0-social-press-kit.zip")
 
 BIO = """PR0 SOCIAL
-Jerrell Lanos. Rapper, singer and DJ. Buffalo, New York.
+Jerrell Lanos. Rapper, singer and DJ. Buffalo, New York, by way of Rochester.
 
 SHORT BIO, 40 words
-Pr0 Social is Jerrell Lanos, a Buffalo rapper, singer and DJ making
-contemporary R&B with rap lyricism. Six projects since 2018, more than 300,000
-streams, an NPR placement and a Town Ballroom headline.
+Pr0 Social is Jerrell Lanos, a Buffalo rapper, singer and DJ, raised in
+Rochester, making contemporary R&B with rap lyricism. Six projects since 2018,
+more than 300,000 streams, an NPR placement and a Town Ballroom headline.
 
 LONG BIO, 120 words
 Pr0 Social is Jerrell Lanos, a rapper, singer and DJ from Buffalo, New York,
@@ -34,7 +34,8 @@ a Buffalo cheerleading squad in the aftermath of the May 2022 Tops shooting. He
 has a feature from Jae Skeese of Conway the Machine's label, has headlined Town
 Ballroom, and has played Beau Fleuve, MiA Festival and Buffalo Porchfest. He has
 toured Richmond, Boston, Toronto and Pennsylvania. His latest release, "some
-don't make it here..", is an eight track EP from February 2025.
+don't make it here..", is an eight track EP from February 2025. He now DJs bass
+and EDM as well, with an all R&B album in the works.
 
 FACTS
 Based            Buffalo, New York
@@ -44,8 +45,9 @@ Streams          300,000+ across platforms
 Biggest track    chainsmoking, 152,379 Spotify plays
 Press            NPR, three songs from "Things I've Buried" (2023)
 Feature          Jae Skeese
-Rooms played     Town Ballroom (headline), Beau Fleuve, MiA Festival,
-                 Buffalo Porchfest 2025
+Rooms played     Town Ballroom (album release headline, 2023), Beau Fleuve,
+                 MiA Festival, Milkie's with a full band (2025),
+                 Buffalo Porchfest DJ set (2026)
 Toured           Richmond, Boston, Toronto, Pennsylvania
 Latest           "some don't make it here..", 8 track EP, February 2025
 
@@ -56,6 +58,8 @@ SoundCloud       soundcloud.com/pr0social
 YouTube          youtube.com/channel/UC-7JeAdJZiXaNKRxtAwQQIw
 Deezer           deezer.com/en/artist/56472262
 Instagram        instagram.com/prettypr0social
+TikTok           tiktok.com/@prettypr0social
+X                x.com/prettypr0social
 
 BOOKING AND PRESS
 booking@pr0social.com
@@ -69,8 +73,10 @@ BIO.txt      this file
 USAGE
 These photographs are cleared for editorial and promotional use covering
 Pr0 Social: listings, posters, articles, festival programmes and social posts.
-Credit "Pr0 Social" where a credit line is available. For anything else, or for
-a different crop or format, write to booking@pr0social.com.
+Credit "Pr0 Social" where a credit line is available, and the photographer
+where one is named. Photography by Justin Ruggiero, Jean Rios, Pat Cray,
+Elias Lipka and Jerrell Lanos. For anything else, or for a different crop or
+format, write to booking@pr0social.com.
 
 Updated {updated}
 """
